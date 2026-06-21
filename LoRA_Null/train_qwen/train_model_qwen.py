@@ -4,14 +4,14 @@ import sys
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Sequence, List, Literal
 
+# 将项目根目录加入 sys.path，以便 import adapterlib（必须在其他 import 之前）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 import torch
 import transformers
 from transformers import Trainer
 from datasets import load_dataset
 from peft import LoraConfig, get_peft_model, PeftModel
-
-# 将项目根目录加入 sys.path，以便 import adapterlib
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 IGNORE_INDEX = -100
 

@@ -1,13 +1,14 @@
 import numpy as np
 import argparse
-import torch
-import torch.nn as nn
 import os
 import sys
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# 将项目根目录加入 sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+# 将项目根目录加入 sys.path（必须在其他 import 之前）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
+import torch
+import torch.nn as nn
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from train_qwen.mapping.modeling_oursvd_qwen2 import CovSVDLinear
 

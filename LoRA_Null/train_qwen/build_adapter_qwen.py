@@ -1,15 +1,16 @@
 import argparse
+import os
+import sys
+
+# 将项目根目录加入 sys.path，以便 import adapterlib（必须在 import adapterlib 之前）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from adapterlib.datautils import get_calib_data
 from adapterlib.act_aware_utils import calib_input_distribution, calib_fisher_info, calib_cov_distribution
 from adapterlib.decomposition import build_model2
 import numpy as np
-import os
-import sys
-
-# 将项目根目录加入 sys.path，以便 import adapterlib
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
 def main(args):
