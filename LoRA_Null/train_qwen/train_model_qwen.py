@@ -254,6 +254,14 @@ def train():
     trainer.save_state()
     model.save_pretrained(os.path.join(script_args.output_dir, 'ft'))
     tokenizer.save_pretrained(os.path.join(script_args.output_dir, 'ft'))
+    # 复制 mapping 文件到 ft/ 目录，确保 auto_map 能找到
+    import shutil
+    mapping_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mapping')
+    for fname in ['configuration_oursvd_qwen2.py', 'modeling_oursvd_qwen2.py']:
+        src = os.path.join(mapping_dir, fname)
+        dst = os.path.join(script_args.output_dir, 'ft', fname)
+        if os.path.exists(src) and not os.path.exists(dst):
+            shutil.copy2(src, dst)
     if script_args.init_lora_weights == True or script_args.init_lora_weights == 'pissa' or script_args.init_lora_weights == 'pissa_niter_4':
         model = model.merge_and_unload()
         model.save_pretrained(os.path.join(script_args.output_dir, 'merged'))
