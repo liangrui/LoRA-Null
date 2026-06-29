@@ -14,8 +14,12 @@ if [ -z "$MODEL_PATH" ]; then
     exit 1
 fi
 
+# 转为绝对路径，避免 HuggingFace 把相对路径误判为 repo_id 去远端下载
+MODEL_PATH="$(cd "$MODEL_PATH" && pwd)"
+echo "Using model path: $MODEL_PATH"
+
 CUDA_VISIBLE_DEVICES=0 accelerate launch -m lm_eval --model hf \
-    --model_args pretrained=$MODEL_PATH \
+    --model_args pretrained=$MODEL_PATH,trust_remote_code=True \
     --output_path result_path/qwen_result.json \
     --tasks triviaqa,webqs,nq_open \
     --batch_size 64 \

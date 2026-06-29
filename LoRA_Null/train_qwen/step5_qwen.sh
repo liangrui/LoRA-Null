@@ -14,14 +14,18 @@ if [ -z "$MODEL_PATH" ]; then
     exit 1
 fi
 
+# 转为绝对路径，避免 HuggingFace 把相对路径误判为 repo_id 去远端下载
+MODEL_PATH="$(cd "$MODEL_PATH" && pwd)"
+echo "Using model path: $MODEL_PATH"
+
 # GSM8K 评估
 echo "Running GSM8K inference..."
 CUDA_VISIBLE_DEVICES=0 python inference/gsm8k_inference.py \
-    --model $MODEL_PATH \
+    --model "$MODEL_PATH" \
     --batch_size 60
 
 # MATH 评估
 echo "Running MATH inference..."
 CUDA_VISIBLE_DEVICES=0 python inference/MATH_inference.py \
-    --model $MODEL_PATH \
+    --model "$MODEL_PATH" \
     --batch_size 50
