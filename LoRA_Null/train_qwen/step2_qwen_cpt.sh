@@ -49,7 +49,7 @@ echo "  Output dir:  ${OUTPUT}_Null_v1"
 echo "  Data path:   $DATA_PATH"
 echo "============================================================"
 
-CUDA_VISIBLE_DEVICES=0 python -u train_qwen/train_model_qwen_for_pretrain.py \
+CUDA_VISIBLE_DEVICES=5 HF_ENDPOINT=https://hf-mirror.com python -u train_qwen/train_model_qwen_for_pretrain.py \
     --model_name_or_path $BASE_MODEL \
     --output_dir ${OUTPUT}_Null_v1 \
     --Null_mode True \
