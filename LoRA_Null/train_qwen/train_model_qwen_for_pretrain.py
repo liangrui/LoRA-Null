@@ -172,7 +172,6 @@ def train():
 
         model = transformers.AutoModelForCausalLM.from_pretrained(
             script_args.model_name_or_path,
-            device_map="auto",
             trust_remote_code=True,
         )
 
