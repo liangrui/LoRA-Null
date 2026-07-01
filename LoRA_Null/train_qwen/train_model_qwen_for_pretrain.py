@@ -225,7 +225,23 @@ def train():
 
     # ===== 加载并处理 CPT 数据 =====
     print(f"\nLoading CPT data from: {script_args.data_path}")
-    raw_train_datasets = load_dataset(script_args.data_path, split=script_args.dataset_split)
+
+    # 支持本地 JSON/JSONL 文件和 HuggingFace Hub 数据集
+    if os.path.exists(script_args.data_path):
+        # 本地文件：根据扩展名选择加载方式
+        ext = os.path.splitext(script_args.data_path)[1].lower()
+        if ext in (".jsonl", ".json"):
+            raw_train_datasets = load_dataset(
+                "json", data_files=script_args.data_path, split=script_args.dataset_split
+            )
+        else:
+            raw_train_datasets = load_dataset(
+                script_args.data_path, split=script_args.dataset_split
+            )
+    else:
+        # HuggingFace Hub 数据集
+        raw_train_datasets = load_dataset(script_args.data_path, split=script_args.dataset_split)
+
     print(f"Dataset loaded: {len(raw_train_datasets)} samples")
     print(f"Example: {raw_train_datasets[0]}")
 
