@@ -58,7 +58,8 @@ CUDA_VISIBLE_DEVICES=0 python -u train_qwen/train_model_qwen_for_pretrain.py \
     --dataset_split "train" \
     --num_train_epochs 1 \
     --per_device_train_batch_size 1 \
-    --gradient_accumulation_steps 128 \
+    --gradient_accumulation_steps 8 \
+    --gradient_checkpointing True \
     --save_strategy "steps" \
     --save_steps 100 \
     --save_total_limit 1 \
@@ -70,7 +71,7 @@ CUDA_VISIBLE_DEVICES=0 python -u train_qwen/train_model_qwen_for_pretrain.py \
     --bf16 True \
     --tf32 True \
     --report_to none \
-    --model_max_length 512
+    --model_max_length 256
 
 echo ""
 echo "CPT training completed. Output: ${OUTPUT}_Null_v1/ft"
