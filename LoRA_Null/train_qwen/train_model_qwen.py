@@ -230,7 +230,19 @@ def train():
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
     print(script_args.data_path)
-    raw_train_datasets = load_dataset(script_args.data_path, split=script_args.dataset_split)
+    # 支持本地 JSON/JSONL 文件和 HuggingFace Hub 数据集
+    if os.path.exists(script_args.data_path):
+        ext = os.path.splitext(script_args.data_path)[1].lower()
+        if ext in (".jsonl", ".json"):
+            raw_train_datasets = load_dataset(
+                "json", data_files=script_args.data_path, split=script_args.dataset_split
+            )
+        else:
+            raw_train_datasets = load_dataset(
+                script_args.data_path, split=script_args.dataset_split
+            )
+    else:
+        raw_train_datasets = load_dataset(script_args.data_path, split=script_args.dataset_split)
     train_dataset = raw_train_datasets.map(
         train_tokenize_function,
         batched=True,
