@@ -166,7 +166,7 @@ def train():
         print("Train in Null mode (Qwen2)")
         model = transformers.AutoModelForCausalLM.from_pretrained(
             script_args.model_name_or_path,
-            device_map="auto",
+            torch_dtype=torch.bfloat16,
             trust_remote_code=True
         )
         for n, p in model.named_parameters():
@@ -178,7 +178,7 @@ def train():
         print("Train in LoRA mode (Qwen2)")
         model = transformers.AutoModelForCausalLM.from_pretrained(
             script_args.model_name_or_path,
-            device_map="auto",
+            torch_dtype=torch.bfloat16,
             trust_remote_code=True,
         )
         if script_args.lora_dropout == 0.05:
@@ -205,7 +205,6 @@ def train():
         model = transformers.AutoModelForCausalLM.from_pretrained(
             script_args.model_name_or_path,
             torch_dtype=torch.bfloat16,
-            device_map="auto",
             trust_remote_code=True,
         )
     print(model)
@@ -257,6 +256,9 @@ def train():
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     data_module = dict(train_dataset=train_dataset, data_collator=data_collator)
     trainer = Trainer(model=model, tokenizer=tokenizer, args=script_args, **data_module)
+    # 禁用 num_items_in_batch，避免 transformers>=4.46 将 loss 从 mean 改为 sum
+    # 导致 logged loss 异常偏高（~300 而非 ~3）
+    trainer.model_accepts_loss_kwargs = False
     model.config.use_cache = False
 
     trainer.train()
